@@ -1,0 +1,12 @@
+<plugin name='webxml' version='1.0'>
+  <author>Roger Cass</author>
+  <authorEmail>roger.cass@byu.net</authorEmail>
+  <title>Create useful additions to web.xml</title>
+  <description>Used the doWithWebDescriptor feature of plugins to create application-configured features otherwise unavailable.</description>
+  <documentation>http://grails.org/WebXML+Plugin</documentation>
+  <resources>
+    <resource>DataSource</resource>
+    <resource>DefaultWebXmlConfig</resource>
+    <resource>UrlMappings</resource>
+  </resources>
+</plugin>
