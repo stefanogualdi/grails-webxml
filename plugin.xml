@@ -5,8 +5,6 @@
   <description>Used the doWithWebDescriptor feature of plugins to create application-configured features otherwise unavailable.</description>
   <documentation>http://grails.org/WebXML+Plugin</documentation>
   <resources>
-    <resource>DataSource</resource>
     <resource>DefaultWebXmlConfig</resource>
-    <resource>UrlMappings</resource>
   </resources>
 </plugin>
