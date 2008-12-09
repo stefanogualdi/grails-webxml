@@ -1,3 +1,6 @@
+//import groovy.xml.StreamingMarkupBuilder
+
+
 /**
  * Copyright 2008 Roger Cass (roger.cass@byu.net)
  *
@@ -12,17 +15,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * History
+ *   1.0 Roger Cass, Filter/BeanMapping
+ *   1.1 ericacm - gmail.com, Listener
+ *   
  */
 class WebxmlGrailsPlugin {
 
     def DEFAULT_CONFIG_FILE = "DefaultWebXmlConfig"
     def APP_CONFIG_FILE     = "WebXmlConfig"
 
-    def version = "1.0"
+    def version = "1.1"
     def author = "Roger Cass"
     def authorEmail = "roger.cass@byu.net"
     def title = "Create useful additions to web.xml"
-    def description = "Used the doWithWebDescriptor feature of plugins to create application-configured features otherwise unavailable."
+    def description = '''Add additional Features to your web.xml, such as Filters, Config Listeners or Context
+Parameter definitions '''
     def documentation = "http://grails.org/WebXML+Plugin"
     def watchedResources = "**/grails-app/conf/${APP_CONFIG_FILE}.groovy"    
 	
@@ -60,7 +69,22 @@ class WebxmlGrailsPlugin {
                         }
                     }
             }
+
+            if (config.listener?.add) {
+                def listenerNode = xml."listener"
+
+                config.listener.classNames.each{ cn ->
+                    def lnode = {
+                        listener {
+                            'listener-class'(cn)
+                        }
+                    }
+                    listenerNode[listenerNode.size() - 1] + lnode
+                }
+            }
         }
+
+//            System.out.println new StreamingMarkupBuilder().bind{ out << xml }
     }
 	                                      
     def doWithDynamicMethods = { ctx ->

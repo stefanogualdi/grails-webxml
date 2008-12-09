@@ -23,4 +23,7 @@ webxml {
     filterChainProxyDelegator.urlPattern = "/*"
     filterChainProxyDelegator.filterName = "filterChainProxyDelegator"
     filterChainProxyDelegator.className = "org.springframework.web.filter.DelegatingFilterProxy"
+    
+    listener.add = false
+    //listener.classNames = ["org.springframework.web.context.request.RequestContextListener"]
 }

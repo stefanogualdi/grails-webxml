@@ -20,7 +20,11 @@ webxml {
     
     // The URL pattern to which the filter will apply.  Usually set to '/*' to cover all URLs.
     //filterChainProxyDelegator.urlPattern = "/*"
-    
+
+    // Set to true to add Listeners
+    //listener.add = true
+    //listener.classNames = ["org.springframework.web.context.request.RequestContextListener"]
+
     //-------------------------------------------------
     // These settings usually do not need to be changed
     //-------------------------------------------------
