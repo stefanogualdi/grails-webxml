@@ -34,4 +34,15 @@ webxml {
     
     // The delegating filter proxy class.
     //filterChainProxyDelegator.className = "org.springframework.web.filter.DelegatingFilterProxy"
+
+    // ------------------------------------------------
+    // Example for context aparameters
+    // ------------------------------------------------
+    // this example will create the following XML part
+    // contextparams = [port: '6001']
+    //
+    //  <context-param>
+    //    <param-name>port</param-name>
+    //    <param-value>6001</param-value>
+    //  </context-param>
 }

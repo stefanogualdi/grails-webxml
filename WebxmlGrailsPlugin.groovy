@@ -19,6 +19,7 @@
  * History
  *   1.0 Roger Cass, Filter/BeanMapping
  *   1.1 ericacm - gmail.com, Listener
+ *   1.2 Bob Schulze al.lias - web.de, Context Parameters
  *   
  */
 class WebxmlGrailsPlugin {
@@ -26,7 +27,7 @@ class WebxmlGrailsPlugin {
     def DEFAULT_CONFIG_FILE = "DefaultWebXmlConfig"
     def APP_CONFIG_FILE     = "WebXmlConfig"
 
-    def version = "1.1"
+    def version = "1.2"
     def author = "Roger Cass"
     def authorEmail = "roger.cass@byu.net"
     def title = "Create useful additions to web.xml"
@@ -48,7 +49,7 @@ Parameter definitions '''
         def config = getConfig()
 
         if(config) {
-            if(config.filterChainProxyDelegator.add) {
+            if(config.filterChainProxyDelegator?.add) {
                 def contextParam = xml."context-param"
                     contextParam[contextParam.size() - 1] + {
                         'filter' {
@@ -80,6 +81,20 @@ Parameter definitions '''
                         }
                     }
                     listenerNode[listenerNode.size() - 1] + lnode
+                }
+            }
+
+            // add possibility for context params. As with the other features, the generated result is a bit thin,
+            // it could contain the descriptions field too, a context.xml also would be a good idea...  (bs)
+            if (config.contextparams) {
+                config.contextparams.each{ k, v ->
+                    def contextParam = xml."context-param"
+                        contextParam[contextParam.size() - 1] + {
+                        'context-param' {
+                            'param-name'(k)
+                            'param-value'(v)
+                            }
+                        }
                 }
             }
         }
