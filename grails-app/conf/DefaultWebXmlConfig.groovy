@@ -27,6 +27,5 @@ webxml {
     listener.add = false
     //listener.classNames = ["org.springframework.web.context.request.RequestContextListener"]
 
-    contextparams = [sample: 'Sample Value']
-    
+    contextparams = [sample: 'Sample Value']    
 }
