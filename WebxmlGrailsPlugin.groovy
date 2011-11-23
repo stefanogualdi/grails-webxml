@@ -1,5 +1,9 @@
-//import groovy.xml.StreamingMarkupBuilder
+import grails.util.Environment
+import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Copyright 2008 Roger Cass (roger.cass@byu.net)
@@ -20,128 +24,116 @@
  *   1.0 Roger Cass, Filter/BeanMapping
  *   1.1 ericacm - gmail.com, Listener
  *   1.2 Bob Schulze al.lias - web.de, Context Parameters
- *   
+ *   1.3 Burt Beckwith; added new feature to order filter-mapping elements
  */
 class WebxmlGrailsPlugin {
 
-    def DEFAULT_CONFIG_FILE = "DefaultWebXmlConfig"
-    def APP_CONFIG_FILE     = "WebXmlConfig"
+	private static final String DEFAULT_CONFIG_FILE = "DefaultWebXmlConfig"
+	private static final String APP_CONFIG_FILE     = "WebXmlConfig"
 
-    def version = "1.2"
-    def author = "Roger Cass"
-    def authorEmail = "roger.cass@byu.net"
-    def title = "Create useful additions to web.xml"
-    def description = '''Add additional Features to your web.xml, such as Filters, Config Listeners or Context
-Parameter definitions '''
-    def documentation = "http://grails.org/WebXML+Plugin"
-    def watchedResources = "**/grails-app/conf/${APP_CONFIG_FILE}.groovy"    
-	
-    def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
-    }
-   
-    def doWithApplicationContext = { applicationContext ->
-        // TODO Implement post initialization spring config (optional)		
-    }
+	private Logger log = LoggerFactory.getLogger('grails.plugin.webxml.WebxmlGrailsPlugin')
 
-    def doWithWebDescriptor = { xml ->
-    
-        def config = getConfig()
+	def version = "1.2"
+	def grailsVersion = '1.2 > *'
+	def author = "Roger Cass"
+	def authorEmail = "roger.cass@byu.net"
+	def title = "Create useful additions to web.xml"
+	def description = 'Add additional Features to your web.xml, such as Filters, Config Listeners or Context Parameter definitions'
+	def documentation = "http://grails.org/plugin/webxml"
 
-        if(config) {
-            if(config.filterChainProxyDelegator?.add) {
-                def contextParam = xml."context-param"
-                    contextParam[contextParam.size() - 1] + {
-                        'filter' {
-                            'filter-name'(config.filterChainProxyDelegator.filterName)
-                            'filter-class'(config.filterChainProxyDelegator.className)
-                            'init-param' {
-                                'param-name'('targetBeanName')
-                                'param-value'(config.filterChainProxyDelegator.targetBeanName)
-                            }
-                        }
-                    }
-        
-                def filter = xml."filter"
-                    filter[filter.size() - 1] + {
-                        'filter-mapping' {
-                            'filter-name'(config.filterChainProxyDelegator.filterName)
-                            'url-pattern'(config.filterChainProxyDelegator.urlPattern)
-                        }
-                    }
-            }
+	def license = 'APACHE'
+	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/GPWEBXML']
+	def scm = [url: 'http://plugins.grails.org/grails-webxml/']
+	def developers = [
+		[name: "Eric Pederson", email: "ericacm@gmail.com"],
+		[name: "Bob Schulze",   email: "al.lias@gmx.de"],
+		[name: "Burt Beckwith", email: "beckwithb@vmware.com"]
+	]
 
-            if (config.listener?.add) {
-                def listenerNode = xml."listener"
+	def doWithWebDescriptor = { xml ->
+		def config = getConfig()
+		if (!config) {
+			return
+		}
 
-                config.listener.classNames.each{ cn ->
-                    def lnode = {
-                        listener {
-                            'listener-class'(cn)
-                        }
-                    }
-                    listenerNode[listenerNode.size() - 1] + lnode
-                }
-            }
+		if (config.filterChainProxyDelegator.add) {
+			def contextParam = xml."context-param"
+			contextParam[contextParam.size() - 1] + {
+				'filter' {
+					'filter-name'(config.filterChainProxyDelegator.filterName)
+					'filter-class'(config.filterChainProxyDelegator.className)
+					'init-param' {
+						'param-name'('targetBeanName')
+						'param-value'(config.filterChainProxyDelegator.targetBeanName)
+					}
+				}
+			}
 
-            // add possibility for context params. As with the other features, the generated result is a bit thin,
-            // it could contain the descriptions field too, a context.xml also would be a good idea...  (bs)
-            if (config.contextparams) {
-                config.contextparams.each{ k, v ->
-                    def contextParam = xml."context-param"
-                        contextParam[contextParam.size() - 1] + {
-                        'context-param' {
-                            'param-name'(k)
-                            'param-value'(v)
-                            }
-                        }
-                }
-            }
-        }
+			def filter = xml."filter"
+			filter[filter.size() - 1] + {
+				'filter-mapping' {
+					'filter-name'(config.filterChainProxyDelegator.filterName)
+					'url-pattern'(config.filterChainProxyDelegator.urlPattern)
+				}
+			}
+		}
 
-//            System.out.println new StreamingMarkupBuilder().bind{ out << xml }
-    }
-	                                      
-    def doWithDynamicMethods = { ctx ->
-        // TODO Implement registering dynamic methods to classes (optional)
-    }
-	
-    def onChange = { event ->
-        // TODO Implement code that is executed when this class plugin class is changed  
-        // the event contains: event.application and event.applicationContext objects
-    }
-                                                                                  
-    def onApplicationChange = { event ->
-        // TODO Implement code that is executed when any class in a GrailsApplication changes
-        // the event contain: event.source, event.application and event.applicationContext objects
-    }
-    
-    def getConfig = {
-        ClassLoader parent = getClass().getClassLoader()
-        GroovyClassLoader loader = new GroovyClassLoader(parent)
+		if (config.listener.add) {
+			def listenerNode = xml."listener"
 
-        def config
+			for (String className in config.listener.classNames) {
+				listenerNode[listenerNode.size() - 1] + {
+					listener {
+						'listener-class'(className)
+					}
+				}
+			}
+		}
 
-        try {
-            def defaultConfigFile = loader.loadClass(DEFAULT_CONFIG_FILE)
-            //log.info("Loading default config file: "+defaultConfigFile)
-            config = new ConfigSlurper().parse(defaultConfigFile)
-            
-            try {
-                def appConfigFile = loader.loadClass(APP_CONFIG_FILE)
-                //log.info("Found application config file: "+appConfigFile)
-                def appConfig = new ConfigSlurper().parse(appConfigFile)
-                if (appConfig) {
-                    //log.info("Merging application config file: "+appConfigFile)
-                    config = config.merge(appConfig)
-                }
-            } catch(ClassNotFoundException e) {
-                //log.warn("Did not find application config file: "+APP_CONFIG_FILE)
-            }
-        } catch(ClassNotFoundException e) {
-            //log.error("Did not find default config file: "+DEFAULT_CONFIG_FILE)
-        }
+		// add possibility for context params. As with the other features, the generated result
+		// is a bit thin, it could contain the descriptions field too, a context.xml also would
+		// be a good idea...  (bs)
+		if (config.contextparams) {
+			config.contextparams.each { String name, String value ->
+				def contextParam = xml."context-param"
+				contextParam[contextParam.size() - 1] + {
+					'context-param' {
+						'param-name'(name)
+						'param-value'(value)
+					}
+				}
+			}
+		}
 
-        config?.webxml
-    }
+		log.trace new StreamingMarkupBuilder().bind { out << xml }
+	}
+
+	private getConfig() {
+		GroovyClassLoader loader = new GroovyClassLoader(getClass().classLoader)
+
+		def config
+		try {
+			def defaultConfigFile = loader.loadClass(DEFAULT_CONFIG_FILE)
+			log.info "Loading default config file: $defaultConfigFile"
+			config = new ConfigSlurper(Environment.current.name).parse(defaultConfigFile)
+
+			try {
+				def appConfigFile = loader.loadClass(APP_CONFIG_FILE)
+				log.info "Found application config file: $appConfigFile"
+				def appConfig = new ConfigSlurper(Environment.current.name).parse(appConfigFile)
+				if (appConfig) {
+					log.info "Merging application config file: $appConfigFile"
+					config = config.merge(appConfig)
+				}
+			}
+			catch (ClassNotFoundException e) {
+				log.warn "Did not find application config file: $APP_CONFIG_FILE"
+			}
+		}
+		catch (ClassNotFoundException e) {
+			log.error "Did not find default config file: $DEFAULT_CONFIG_FILE"
+		}
+
+		config?.webxml
+	}
 }
