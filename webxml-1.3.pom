@@ -1,0 +1,42 @@
+<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.grails.plugins</groupId>
+  <artifactId>webxml</artifactId>
+  <packaging>zip</packaging>
+  <version>1.3</version>
+  <name>Create useful additions to web.xml</name>
+  <description>Add additional Features to your web.xml, such as Filters, Config Listeners or Context Parameter definitions</description>
+  <url>http://grails.org/plugin/webxml</url>
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Roger Cass</name>
+      <email>roger.cass@byu.net</email>
+    </developer>
+    <developer>
+      <name>Eric Pederson</name>
+      <email>ericacm@gmail.com</email>
+    </developer>
+    <developer>
+      <name>Bob Schulze</name>
+      <email>al.lias@gmx.de</email>
+    </developer>
+    <developer>
+      <name>Burt Beckwith</name>
+      <email>beckwithb@vmware.com</email>
+    </developer>
+  </developers>
+  <issueManagement>
+    <system>JIRA</system>
+    <url>http://jira.grails.org/browse/GPWEBXML</url>
+  </issueManagement>
+  <scm>
+    <url>http://plugins.grails.org/grails-webxml/</url>
+  </scm>
+  <dependencies />
+</project>
