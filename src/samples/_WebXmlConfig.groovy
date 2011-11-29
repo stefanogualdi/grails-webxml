@@ -2,7 +2,14 @@
  * Application configuration file for WebXml plugin.
  */
 webxml {
-	//========================================
+    //========================================
+    // Session Timeout
+    //========================================
+    //
+    // uncomment to set session timeout - Be sure to specify value as an Integer
+    // sessionConfig.sessionTimeout = 30
+    
+    //========================================
 	// Delegating Filter Chain
 	//========================================
 	//
