@@ -33,7 +33,7 @@ class WebxmlGrailsPlugin {
 
 	private Logger log = LoggerFactory.getLogger('grails.plugin.webxml.WebxmlGrailsPlugin')
 
-	def version = "1.3"
+	def version = "1.3.1"
 	def grailsVersion = '1.2 > *'
 	def author = "Roger Cass"
 	def authorEmail = "roger.cass@byu.net"
@@ -104,6 +104,16 @@ class WebxmlGrailsPlugin {
 				}
 			}
 		}
+
+        //session Timeout
+        if (config.sessionConfig?.sessionTimeout && (config.sessionConfig?.sessionTimeout instanceof Integer)){
+            def contextParam = xml."context-param"
+            contextParam[contextParam.size() - 1] + {
+                'session-config'{
+                    'session-timeout'(config.sessionConfig.sessionTimeout)
+                }
+            }
+        }
 
 		log.trace new StreamingMarkupBuilder().bind { out << xml }
 	}
