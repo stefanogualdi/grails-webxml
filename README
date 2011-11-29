@@ -1,0 +1,10 @@
+This is a clone for http://plugins.grails.org/grails-webxml
+
+The author of the plugin is: Roger Cass
+
+Official documentation for the plugin can be found on: http://www.grails.org/plugin/webxml
+
+This version integrates the patch from Daniel Bower for the session timeout setting
+
+More info on: http://grails.1312388.n4.nabble.com/Re-update-for-webxml-plugin-to-add-session-timeout-td2074701.html
+
