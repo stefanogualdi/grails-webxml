@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory
  *   1.1 ericacm - gmail.com, Listener
  *   1.2 Bob Schulze al.lias - web.de, Context Parameters
  *   1.3 Burt Beckwith; added new feature to order filter-mapping elements
+ *   1.4 Stefano Gualdi; added patch from Daniel Bower to support session-timeout setting
  */
 class WebxmlGrailsPlugin {
 
@@ -47,7 +48,8 @@ class WebxmlGrailsPlugin {
 	def developers = [
 		[name: "Eric Pederson", email: "ericacm@gmail.com"],
 		[name: "Bob Schulze",   email: "al.lias@gmx.de"],
-		[name: "Burt Beckwith", email: "beckwithb@vmware.com"]
+		[name: "Burt Beckwith", email: "beckwithb@vmware.com"],
+		[name: "Stefano Gualdi", email: "stefano.gualdi@gmail.com"]
 	]
 
 	def doWithWebDescriptor = { xml ->
