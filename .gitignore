@@ -3,3 +3,4 @@
 *.zip
 /web-app
 /target
+plugin.xml
