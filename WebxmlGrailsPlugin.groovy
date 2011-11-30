@@ -33,7 +33,7 @@ class WebxmlGrailsPlugin {
 
 	private Logger log = LoggerFactory.getLogger('grails.plugin.webxml.WebxmlGrailsPlugin')
 
-	def version = "1.3.1"
+	def version = "1.4"
 	def grailsVersion = '1.2 > *'
 	def author = "Roger Cass"
 	def authorEmail = "roger.cass@byu.net"
