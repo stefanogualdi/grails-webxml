@@ -115,7 +115,9 @@ class WebxmlGrailsPlugin {
             }
         }
 
-		log.trace new StreamingMarkupBuilder().bind { out << xml }
+        if (log.isTraceEnabled()) {
+            log.trace new StreamingMarkupBuilder().bind { out << xml }
+        }
 	}
 
 	private getConfig() {

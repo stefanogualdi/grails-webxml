@@ -30,13 +30,27 @@ private void fixWebXml() {
 	}
 
 	def sorted = new TreeMap()
-	filterManager.filterOrder.each { k, v -> sorted[v] = k }
+	def defaultPositionNames = []
+	sorted[FilterManager.DEFAULT_POSITION] = defaultPositionNames
+
+	def orderedNames = []
+	filterManager.filterOrder.each { k, v ->
+		// invert the map; new map key is int (order) and value is list of names for that order
+		def list = sorted[v]
+		if (!list) {
+			list = []
+		}
+		list << k
+		orderedNames << k
+		sorted[v] = list
+	}
+
 	for (String name in findFilterMappingNames(wxml)) {
-		if (!sorted.containsValue(name)) {
-			sorted[FilterManager.DEFAULT_POSITION] = name
+		if (!orderedNames.contains(name)) {
+			defaultPositionNames << name
 		}
 	}
-	def orderedFilterNames = sorted.values() as List
+	def orderedFilterNames = (sorted.values() as List).flatten()
 
 	sortFilterMappingNodes(wxml, orderedFilterNames)
 
